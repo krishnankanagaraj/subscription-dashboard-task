@@ -16,7 +16,16 @@ const loginSchema = z.object({
   }),
 });
 
+const updateProfileSchema = z.object({
+  body: z.object({
+    age: z.number().optional(),
+    gender: z.enum(['Male', 'Female', 'Other']).optional(),
+    mobile: z.string().length(10, 'Mobile number must be 10 digits').optional(),
+  }),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
+  updateProfileSchema,
 };

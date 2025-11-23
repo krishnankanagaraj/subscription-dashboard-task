@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Subscription = require('../models/Subscription');
 
 const generateTokens = (id) => {
   const accessToken = jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -25,11 +26,11 @@ const registerUser = async (req, res, next) => {
       res.status(400);
       throw new Error('User already exists');
     }
-    const hashed = await bcrypt.hash(password, 10);
+
     const user = await User.create({
       name,
       email,
-      password: hashed,
+      password,
       role,
     });
 
@@ -41,10 +42,7 @@ const registerUser = async (req, res, next) => {
       await user.save();
 
       res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        user: user,
         accessToken,
         refreshToken,
       });
@@ -63,20 +61,27 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
-
+    
     if (user && (await user.matchPassword(password))) {
+      let subscription = await Subscription.findOne({ user: user._id });
+      
+      // Check for subscription expiry (Date part only)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (subscription && subscription.status === 'active' && subscription.endDate < today) {
+        subscription.status = 'expired';
+        await subscription.save();
+      }
+
       const { accessToken, refreshToken } = generateTokens(user._id);
 
       user.refreshToken = refreshToken;
       await user.save();
 
       res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        user: user,
         accessToken,
         refreshToken,
       });
@@ -120,8 +125,41 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.age = req.body.age || user.age;
+      user.gender = req.body.gender || user.gender;
+      user.mobile = req.body.mobile || user.mobile;
+
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        age: updatedUser.age,
+        gender: updatedUser.gender,
+        mobile: updatedUser.mobile,
+      });
+    } else {
+      res.status(404);
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   refreshToken,
+  updateProfile,
 };

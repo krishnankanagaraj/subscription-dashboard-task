@@ -3,9 +3,10 @@ import { apiSlice } from './apiSlice';
 export const subscriptionApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation({
-      query: (planId) => ({
+      query: ({ planId,data}) => ({
         url: `/subscriptions/create-order/${planId}`,
         method: 'POST',
+        body:data
       }),
     }),
     verifyPayment: builder.mutation({

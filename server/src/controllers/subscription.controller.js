@@ -10,8 +10,8 @@ const razorpay = require('../config/razorpay');
 const createOrder = async (req, res, next) => {
   try {
     const { planId } = req.params;
-    const userId = req.user._id;
-
+    const userId = req.body._id;
+    
     const plan = await Plan.findById(planId);
     if (!plan) {
       res.status(404);
@@ -19,13 +19,11 @@ const createOrder = async (req, res, next) => {
     }
 
     const options = {
-      amount: plan.price * 100, // amount in smallest currency unit
+      amount: Math.round(plan.price * 100), // amount in smallest currency unit (integer)
       currency: 'INR',
       receipt: `receipt_order_${Date.now()}`,
     };
-
     const order = await razorpay.orders.create(options);
-
     if (!order) {
       res.status(500);
       throw new Error('Some error occured');
@@ -47,9 +45,9 @@ const verifyPayment = async (req, res, next) => {
       razorpayPaymentId,
       razorpaySignature,
       planId,
+      userId
     } = req.body;
-    const userId = req.user._id;
-
+    
     const body = razorpayOrderId + '|' + razorpayPaymentId;
 
     const expectedSignature = crypto
@@ -65,16 +63,30 @@ const verifyPayment = async (req, res, next) => {
       const startDate = new Date();
       const endDate = new Date(startDate);
       endDate.setDate(endDate.getDate() + plan.duration);
-
-      await Subscription.create({
-        user: userId,
-        plan: planId,
-        startDate,
-        endDate,
-        status: 'active',
-        razorpayOrderId,
-        razorpayPaymentId,
+      
+      const existingSubscription = await Subscription.findOne({ 
+        user: userId
       });
+
+      if (existingSubscription) {
+        existingSubscription.plan = planId;
+        existingSubscription.startDate = startDate;
+        existingSubscription.endDate = endDate;
+        existingSubscription.razorpayOrderId = razorpayOrderId;
+        existingSubscription.razorpayPaymentId = razorpayPaymentId;
+        existingSubscription.status = 'active';
+        await existingSubscription.save();
+      } else {
+        await Subscription.create({
+          user: userId,
+          plan: planId,
+          startDate,
+          endDate,
+          status: 'active',
+          razorpayOrderId,
+          razorpayPaymentId,
+        });
+      }
 
       res.json({
         message: 'Payment verified and subscription activated',
@@ -115,6 +127,15 @@ const getMySubscription = async (req, res, next) => {
 // @access  Private/Admin
 const getAllSubscriptions = async (req, res, next) => {
   try {
+    // Bulk expire subscriptions (Date part only)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    await Subscription.updateMany(
+      { status: 'active', endDate: { $lt: today } },
+      { $set: { status: 'expired' } }
+    );
+
     const subscriptions = await Subscription.find({})
       .populate('user', 'name email')
       .populate('plan', 'name price');

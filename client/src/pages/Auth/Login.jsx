@@ -10,6 +10,7 @@ import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../../components/UI/Card';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -33,9 +34,19 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const userData = await login(data).unwrap();
+      toast.success('Login successful');
       dispatch(setCredentials(userData));
-      navigate('/plans');
+      if(userData.user.role==="admin"){
+        navigate('/admin/subscriptions');
+      }
+      else if(userData.user.role==="user"){
+        navigate('/dashboard')
+      }
+      else{
+        navigate('/plans')
+      }
     } catch (err) {
+      toast.error(err?.data?.message || 'Login failed');
       setError('root', {
         type: 'manual',
         message: err?.data?.message || 'Login failed',
@@ -80,9 +91,9 @@ const Login = () => {
             </form>
           </CardContent>
           <CardFooter className="justify-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:underline">
+              <Link to="/register" className="text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                 Register
               </Link>
             </p>

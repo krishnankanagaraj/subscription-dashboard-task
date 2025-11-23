@@ -102,9 +102,9 @@ const Register = () => {
             </form>
           </CardContent>
           <CardFooter className="justify-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:underline">
+              <Link to="/login" className="text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                 Login
               </Link>
             </p>

@@ -8,6 +8,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['Subscription'],
     }),
     register: builder.mutation({
       query: (userData) => ({
@@ -15,8 +16,18 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: userData,
       }),
+      invalidatesTags: ['Subscription'],
+    }),
+
+    updateProfile: builder.mutation({
+      query: (userData) => ({
+        url: '/auth/profile-update',
+        method: 'PUT',
+        body: userData,
+      }),
     }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApiSlice;
+export const { useLoginMutation, useRegisterMutation, useUpdateProfileMutation } = authApiSlice;
+

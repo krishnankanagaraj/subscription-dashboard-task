@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGetPlansQuery } from '../../store/api/plansApiSlice';
-import { useCreateOrderMutation, useVerifyPaymentMutation } from '../../store/api/subscriptionApiSlice';
+import { useCreateOrderMutation, useGetMySubscriptionQuery, useVerifyPaymentMutation } from '../../store/api/subscriptionApiSlice';
 import { loadRazorpay } from '../../utils/razorpay';
 import Button from '../../components/UI/Button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../../components/UI/Card';
 import { Check, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const Plans = () => {
   const navigate = useNavigate();
@@ -15,8 +16,11 @@ const Plans = () => {
   const { data: plans, isLoading: isPlansLoading } = useGetPlansQuery();
   const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
   const [verifyPayment, { isLoading: isVerifying }] = useVerifyPaymentMutation();
+  const { data: subscription } = useGetMySubscriptionQuery();
+  const [currentIndex,setCurrentIndex]=useState(null)
 
-  const handleSubscribe = async (plan) => {
+  const handleSubscribe = async (plan,index) => {
+    setCurrentIndex(index)
     if (!isAuthenticated) {
       navigate('/login');
       return;
@@ -24,31 +28,35 @@ const Plans = () => {
 
     const res = await loadRazorpay();
     if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
+      toast.error('Razorpay SDK failed to load. Are you online?');
       return;
     }
 
     try {
-      const order = await createOrder(plan._id).unwrap();
+      const order = await createOrder({ planId: plan._id, data: user }).unwrap();
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
-        name: 'SubManager',
+        name: user.name,
         description: `Subscription for ${plan.name}`,
         order_id: order.id,
         handler: async function (response) {
           try {
+            // Verify payment
             await verifyPayment({
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,
               planId: plan._id,
+              userId: user._id
             }).unwrap();
+            
+            toast.success('Subscription successful!');
             navigate('/dashboard');
           } catch (err) {
-            alert('Payment verification failed');
+            toast.error('Payment verification failed');
           }
         },
         prefill: {
@@ -63,7 +71,7 @@ const Plans = () => {
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (err) {
-      alert(err?.data?.message || 'Something went wrong');
+      toast.error(err?.data?.message || 'Something went wrong');
     }
   };
 
@@ -78,10 +86,7 @@ const Plans = () => {
   return (
     <div className="space-y-8 px-4">
       <div className="text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Choose your plan
-        </h2>
-        <p className="mt-4 text-lg text-gray-600">
+        <p className="mt-4 text-lg text-gray-600 dark:text-white">
           Select the perfect plan for your needs
         </p>
       </div>
@@ -96,10 +101,13 @@ const Plans = () => {
           >
             <Card className="flex flex-col h-full hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle className="text-xl">{plan.name}</CardTitle>
-                <div className="mt-4 flex items-baseline text-gray-900">
+                <CardTitle className="text-xl flex justify-between">
+                  {plan.name} 
+                  {(isAuthenticated&&subscription?.plan?._id === plan._id) ? <span className="text-green-500 text-sm">Active</span> : ""}
+                </CardTitle>
+                <div className="mt-4 flex items-baseline text-gray-900 dark:text-slate-100">
                   <span className="text-4xl font-bold tracking-tight">₹{plan.price}</span>
-                  <span className="ml-1 text-xl font-semibold text-gray-500">
+                  <span className="ml-1 text-xl font-semibold text-gray-500 dark:text-slate-400">
                     /{plan.duration === 365 ? 'year' : 'month'}
                   </span>
                 </div>
@@ -111,20 +119,34 @@ const Plans = () => {
                       <div className="flex-shrink-0">
                         <Check className="h-5 w-5 text-green-500" />
                       </div>
-                      <p className="ml-3 text-sm text-gray-700">{feature}</p>
+                      <p className="ml-3 text-sm text-gray-700 dark:text-slate-300">{feature}</p>
                     </li>
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  onClick={() => handleSubscribe(plan)}
-                  isLoading={isCreatingOrder || isVerifying}
-                >
-                  {isAuthenticated ? 'Subscribe Now' : 'Login to Subscribe'}
-                </Button>
-              </CardFooter>
+              {(isAuthenticated&&subscription?.plan?._id !== plan._id && user?.role !== 'admin') && (
+                <CardFooter>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSubscribe(plan,index)}
+                    isLoading={(isCreatingOrder || isVerifying)&&currentIndex===index}
+                  >
+                   Subscribe Now
+                  </Button>
+                </CardFooter>
+              )}
+              {!isAuthenticated && (
+                <CardFooter>
+                  <Button
+                    className="w-full"
+                    onClick={() => navigate('/login')}
+                    isLoading={(isCreatingOrder || isVerifying) && currentIndex}
+                  >
+                    Login to Subscribe
+                  </Button>
+                </CardFooter>
+              )}
+
             </Card>
           </motion.div>
         ))}

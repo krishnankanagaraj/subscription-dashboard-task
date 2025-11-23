@@ -6,7 +6,7 @@ const Card = React.forwardRef(({ className, children, ...props }, ref) => {
   return (
     <div
       ref={ref}
-      className={twMerge(clsx('rounded-lg border bg-white text-gray-950 shadow-sm', className))}
+      className={twMerge(clsx('rounded-lg border bg-white text-gray-950 shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100', className))}
       {...props}
     >
       {children}
