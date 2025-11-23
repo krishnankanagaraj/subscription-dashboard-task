@@ -6,12 +6,19 @@ const cookieParser = require('cookie-parser');
 const { errorHandler } = require('./middlewares/error.middleware');
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173", // for local dev (Vite)
+  "https://subscription-dashboard-task-1.onrender.com/" // production frontend
+];
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 app.use(helmet());
 app.use(morgan('dev'));
 
