@@ -8,7 +8,7 @@ const { errorHandler } = require('./middlewares/error.middleware');
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173", // for local dev (Vite)
-  "https://subscription-dashboard-task-1.onrender.com/" // production frontend
+  "https://subscription-dashboard-task-1.onrender.com" // production frontend
 ];
 
 // Middleware

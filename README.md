@@ -28,8 +28,8 @@ A full-stack subscription management system with JWT authentication, role-based 
 ### Backend
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
-- **MongoDB** - Database
-- **Mongoose** - ODM for MongoDB
+- **MongoDB** - Database (Atlas for production)
+- **Mongoose** - ORM for MongoDB
 - **JWT** - Authentication
 - **Razorpay** - Payment gateway integration
 - **Bcrypt.js** - Password hashing
