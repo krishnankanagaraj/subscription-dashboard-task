@@ -37,7 +37,7 @@ const seedPlans = async () => {
             {
                 name: 'Annual Basic',
                 price: 99.99,
-                features: ['Access to basic content', 'SD Quality', '1 Device'],
+                features: ['Access to basic content', 'SD Quality', '1 Device','Offline Downloads','No Ads'],
                 duration: 365,
             },
         ];
