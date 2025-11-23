@@ -60,20 +60,26 @@ const seedUsers = async () => {
         const users = await Promise.all([
             {
                 name: 'Admin',
-                email: 'admin@admin.com',
+                email: 'admin@gmail.com',
                 password: await passwordHasher('admin'),
                 role: 'admin',
             },
             {
                 name: 'Krishnan',
-                email: 'krishnan@krishnan.com',
-                password: await passwordHasher('krishnan'),
+                email: 'krishnan@gmail.com',
+                password: await passwordHasher('user'),
                 role: 'user',
             },
             {
-                name: 'Soundharya',
-                email: 'soundharya@soundharya.com',
-                password: await passwordHasher('soundharya'),
+                name: 'john',
+                email: 'john@gmail.com',
+                password: await passwordHasher('user'),
+                role: 'user',
+            },
+            {
+                name: 'mathew',
+                email: 'mathew@gmail.com',
+                password: await passwordHasher('user'),
                 role: 'user',
             },
         ]);

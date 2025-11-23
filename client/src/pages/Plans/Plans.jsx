@@ -16,7 +16,7 @@ const Plans = () => {
   const { data: plans, isLoading: isPlansLoading } = useGetPlansQuery();
   const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
   const [verifyPayment, { isLoading: isVerifying }] = useVerifyPaymentMutation();
-  const { data: subscription } = useGetMySubscriptionQuery();
+  const { data: subscription } = useGetMySubscriptionQuery(undefined,{skip:!user});
   const [currentIndex,setCurrentIndex]=useState(null)
 
   const handleSubscribe = async (plan,index) => {
