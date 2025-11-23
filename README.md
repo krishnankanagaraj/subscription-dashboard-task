@@ -1,12 +1,17 @@
 # Subscription Management Dashboard
 
-A full-stack subscription management system with JWT authentication, role-based access control, Razorpay payment integration, and a modern dark mode UI.
+A full-stack subscription management system with JWT authentication, role-based access control, Razorpay payment integration, and a modern dark/light mode UI.
+
+## 👨‍💻 Task Done By
+- Name: Krishnan
+- Email: krishnankanagaraj2105@gmail.com
+- Mobile: 8668084373
 
 ## 🔗 Links
 
-- **GitHub Repository**: `[Add your GitHub repo URL here]`
-- **Frontend Deployment**: `[Add your frontend deployment URL here]`
-- **Backend Deployment**: `[Add your backend deployment URL here]`
+- **GitHub Repository**: https://github.com/krishnankanagaraj/subscription-dashboard-task.git
+- **Frontend Deployment**: https://subscription-dashboard-task-1.onrender.com/
+- **Backend Deployment**:https://subscription-dashboard-task-86cp.onrender.com/
 
 ---
 
@@ -80,63 +85,19 @@ A full-stack subscription management system with JWT authentication, role-based 
 - **Transaction Tracking** with payment IDs
 
 ### Admin Features
-- **Admin Dashboard** to view all subscriptions
+- **Admin Dashboard** to view all subscriptions users
 - **Search Functionality** with debouncing (500ms)
-- **User Subscription Management**
 - **Real-time Subscription Status** (active/expired)
 
 ### UI/UX Features
 - **Dark Mode Support** with persistent theme storage
 - **Responsive Design** - Mobile, tablet, and desktop
 - **Toast Notifications** - User-friendly feedback
-- **Loading States** - Skeleton loaders and spinners
+- **Loading States** - Spinners
 - **Smooth Animations** - Framer Motion transitions
 - **Form Validation** - Real-time error messages
 
 ---
-
-## 📁 Project Structure
-
-```
-subscription-dashboard/
-├── client/                 # Frontend React application
-│   ├── src/
-│   │   ├── components/    # Reusable UI components
-│   │   │   ├── Auth/      # Authentication components
-│   │   │   ├── Layout/    # Layout components (Navbar, Layout)
-│   │   │   └── UI/        # UI components (Button, Card, Input)
-│   │   ├── pages/         # Page components
-│   │   │   ├── Admin/     # Admin pages
-│   │   │   ├── Auth/      # Login & Register
-│   │   │   ├── Dashboard/ # User dashboard
-│   │   │   ├── Plans/     # Subscription plans
-│   │   │   └── Profile/   # User profile
-│   │   ├── store/         # Redux store
-│   │   │   ├── api/       # RTK Query API slices
-│   │   │   └── slices/    # Redux slices
-│   │   ├── utils/         # Utility functions
-│   │   ├── App.jsx        # Main app component
-│   │   └── main.jsx       # Entry point
-│   ├── index.html
-│   ├── tailwind.config.js
-│   ├── vite.config.js
-│   └── package.json
-│
-└── server/                # Backend Node.js application
-    ├── src/
-    │   ├── config/        # Configuration files
-    │   ├── controllers/   # Route controllers
-    │   ├── middleware/    # Custom middleware
-    │   ├── models/        # Mongoose models
-    │   ├── routes/        # API routes
-    │   ├── utils/         # Utility functions
-    │   └── server.js      # Entry point
-    ├── .env
-    └── package.json
-```
-
----
-
 ## 🚀 Setup Instructions
 
 ### Prerequisites
@@ -146,7 +107,7 @@ subscription-dashboard/
 
 ### 1. Clone the Repository
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/krishnankanagaraj/subscription-dashboard-task.git
 cd subscription-dashboard
 ```
 
@@ -164,7 +125,6 @@ Create a `.env` file in the `server` directory:
 ```env
 # Server Configuration
 PORT=5000
-NODE_ENV=development
 
 # Database
 MONGODB_URI=mongodb://localhost:27017/subscription-db
@@ -175,16 +135,10 @@ MONGODB_URI=mongodb://localhost:27017/subscription-db
 JWT_ACCESS_SECRET=your-super-secret-access-key-change-this
 JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this
 
-# JWT Expiry
-JWT_ACCESS_EXPIRY=15m
-JWT_REFRESH_EXPIRY=7d
-
 # Razorpay
 RAZORPAY_KEY_ID=your_razorpay_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 
-# CORS
-CLIENT_URL=http://localhost:5173
 ```
 
 ### 3. Frontend Setup
@@ -202,7 +156,6 @@ Create a `.env` file in the `client` directory:
 VITE_API_URL=http://localhost:5000/api
 VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 ```
-
 ---
 
 ## 🏃 Running the Application
@@ -239,29 +192,6 @@ npm start
 
 ---
 
-## 🔑 Environment Variables
-
-### Backend (.env)
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `PORT` | Server port | `5000` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/subscription-db` |
-| `JWT_ACCESS_SECRET` | Secret for access tokens | `your-secret-key` |
-| `JWT_REFRESH_SECRET` | Secret for refresh tokens | `your-refresh-secret` |
-| `JWT_ACCESS_EXPIRY` | Access token expiry | `15m` |
-| `JWT_REFRESH_EXPIRY` | Refresh token expiry | `7d` |
-| `RAZORPAY_KEY_ID` | Razorpay API key | `rzp_test_xxxxx` |
-| `RAZORPAY_KEY_SECRET` | Razorpay secret | `your_secret` |
-| `CLIENT_URL` | Frontend URL for CORS | `http://localhost:5173` |
-
-### Frontend (.env)
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `VITE_API_URL` | Backend API URL | `http://localhost:5000/api` |
-| `VITE_RAZORPAY_KEY_ID` | Razorpay key for frontend | `rzp_test_xxxxx` |
-
----
-
 ## 📡 API Documentation
 
 ### Authentication Endpoints
@@ -272,9 +202,9 @@ POST /api/auth/register
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
+  "name": "krishnan",
+  "email": "krishnan@gmail.com",
+  "password": "user"
 }
 ```
 
@@ -284,37 +214,20 @@ POST /api/auth/login
 Content-Type: application/json
 
 {
-  "email": "john@example.com",
-  "password": "password123"
+  "email": "admin@gmail.com",
+  "password": "admin"
 }
 ```
 
 #### Refresh Token
 ```http
-POST /api/auth/refresh
+POST /api/auth/refresh-token
 Cookie: refreshToken=xxx
 ```
-
-#### Logout
+#### user profile update
 ```http
-POST /api/auth/logout
+GET /api/auth/profile-update
 Authorization: Bearer {accessToken}
-```
-
-### User Endpoints
-
-#### Get Profile
-```http
-GET /api/users/profile
-Authorization: Bearer {accessToken}
-```
-
-#### Update Profile
-```http
-PUT /api/users/profile
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-
 {
   "age": 25,
   "gender": "Male",
@@ -331,13 +244,10 @@ GET /api/plans
 
 #### Create Order
 ```http
-POST /api/subscriptions/create-order
+POST /api/subscriptions/create-order/{planId}
 Authorization: Bearer {accessToken}
 Content-Type: application/json
-
-{
-  "planId": "plan_id_here"
-}
+{user:{name:krishnan,email:krishnan@gmail.com,_id:123}}
 ```
 
 #### Verify Payment
@@ -351,7 +261,7 @@ Content-Type: application/json
   "razorpayPaymentId": "pay_xxx",
   "razorpaySignature": "signature_xxx",
   "planId": "plan_id_here",
-  "userId": "user_id_here"
+  "userId": "123"
 }
 ```
 
@@ -363,7 +273,7 @@ Authorization: Bearer {accessToken}
 
 #### Get All Subscriptions (Admin)
 ```http
-GET /api/subscriptions
+GET /api/subscriptions/admin/subscriptions
 Authorization: Bearer {accessToken}
 ```
 
@@ -375,10 +285,10 @@ Authorization: Bearer {accessToken}
 - Users can register with name, email, and password
 - Passwords are securely hashed using bcrypt
 - JWT tokens are issued upon successful login
-- Refresh tokens stored in HTTP-only cookies
+- Refresh tokens stored in localStorage
 
 ### 2. Subscription Plans
-- Three tiers: Basic, Standard, Premium
+- Four tiers: Basic, Standard, Premium and Annual Basic
 - Each plan displays features and pricing
 - Users can view all available plans
 - Active subscription is highlighted
@@ -394,11 +304,11 @@ Authorization: Bearer {accessToken}
 ### 4. User Dashboard
 - View current subscription details
 - See plan features
-- Check subscription dates
+- Check subscription start and end dates
 - View payment ID
 
 ### 5. Admin Dashboard
-- View all user subscriptions
+- View all user subscriptions users list
 - Search users by name or email
 - See subscription status (active/expired)
 - View payment details
@@ -411,21 +321,20 @@ Authorization: Bearer {accessToken}
 
 ### 7. Idle Timeout
 - Automatically logs out users after 15 minutes of inactivity
-- Shows warning toast before logout
+- Shows warning toast on logout
 - Resets on user interaction
 
 ---
 
 ## 🚢 Deployment
 
-### Backend Deployment (e.g., Render, Railway, Heroku)
+### Backend Deployment
 
 1. Set environment variables in your hosting platform
 2. Update `MONGODB_URI` to production database
-3. Update `CLIENT_URL` to production frontend URL
-4. Deploy using platform-specific commands
+3. Deploy using platform-specific commands
 
-### Frontend Deployment (e.g., Vercel, Netlify)
+### Frontend Deployment
 
 1. Build the project: `npm run build`
 2. Set `VITE_API_URL` to production backend URL
@@ -436,53 +345,11 @@ Authorization: Bearer {accessToken}
 - Update CORS settings in backend for production URL
 - Use production Razorpay keys
 - Enable HTTPS for both frontend and backend
-- Set `NODE_ENV=production` in backend
 
 ---
 
-## 🧪 Testing
-
-### Manual Testing Checklist
-- [ ] User registration and login
-- [ ] Profile update
-- [ ] View subscription plans
-- [ ] Complete payment flow
-- [ ] View user dashboard
-- [ ] Admin dashboard access
-- [ ] Search functionality
-- [ ] Theme toggle
-- [ ] Idle timeout
-- [ ] Responsive design
-
+## 👨‍💻 Task Done By
+- Name: Krishnan
+- Email: krishnankanagaraj2105@gmail.com
+- mobile: 8668084373
 ---
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the ISC License.
-
----
-
-## 👨‍💻 Author
-
-**[Your Name]**
-- GitHub: [@yourusername]
-- Email: your.email@example.com
-
----
-
-## 🙏 Acknowledgments
-
-- React and Redux teams for excellent documentation
-- Tailwind CSS for the utility-first CSS framework
-- Razorpay for payment integration
-- All open-source contributors
