@@ -13,6 +13,15 @@ A full-stack subscription management system with JWT authentication, role-based 
 - **Frontend Deployment**: https://subscription-dashboard-task-1.onrender.com/
 - **Backend Deployment**:https://subscription-dashboard-task-86cp.onrender.com/
 
+- ** To use app
+admin login
+email: admin@gmail.com
+password: admin
+
+user login
+email: krishnan@gmail.com
+password: user
+
 ---
 
 ## 📋 Table of Contents

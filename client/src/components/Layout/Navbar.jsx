@@ -83,19 +83,20 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="sm:hidden dark:bg-slate-800">
           <div className="pt-2 pb-3 space-y-1">
-            <Link to="/plans" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100">
-              Plans
-            </Link>
-            {isAuthenticated && (
+            {isAuthenticated && user.role==="user" && (
               <Link to="/dashboard" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100">
                 Dashboard
               </Link>
             )}
             {isAuthenticated && user?.role === 'admin' && (
               <Link to="/admin/subscriptions" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100">
-                Admin
+                Admin Dashboard
               </Link>
             )}
+            <Link to="/plans" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100">
+              Plans
+            </Link>
+            
           </div>
           <div className="pt-4 pb-4 border-t border-gray-200 dark:border-slate-700">
             <div className="px-4 mb-3">
